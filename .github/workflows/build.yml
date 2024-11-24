@@ -35,11 +35,11 @@ jobs:
           brew install create-dmg
         continue-on-error: false
 
-      - name: Build and package app
+      - name: Build and Package App
         run: bun run release
         continue-on-error: false
 
-      - name: Get version from package.json
+      - name: Get Version from package.json
         id: get_version
         run: |
           if [ -f "package.json" ]; then
@@ -49,7 +49,7 @@ jobs:
             exit 1
           fi
 
-      - name: Verify DMG files exist
+      - name: Verify DMG Files Exist
         run: |
           for arch in x64 universal arm64; do
             if [ ! -f "dist/AppleBlox-${VERSION}_${arch}.dmg" ]; then
@@ -58,7 +58,7 @@ jobs:
             fi
           done
 
-      - name: Upload (mac_x64)
+      - name: Upload DMG (mac_x64)
         uses: actions/upload-artifact@v4
         with:
           name: AppleBlox-${{ env.VERSION }}_x64.dmg
@@ -66,7 +66,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      - name: Upload (mac_universal)
+      - name: Upload DMG (mac_universal)
         uses: actions/upload-artifact@v4
         with:
           name: AppleBlox-${{ env.VERSION }}_universal.dmg
@@ -74,7 +74,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      - name: Upload (mac_arm64)
+      - name: Upload DMG (mac_arm64)
         uses: actions/upload-artifact@v4
         with:
           name: AppleBlox-${{ env.VERSION }}_arm64.dmg
@@ -87,9 +87,9 @@ jobs:
         run: |
           echo "### Build Results 📦" >> $GITHUB_STEP_SUMMARY
           echo "Version: ${{ env.VERSION }}" >> $GITHUB_STEP_SUMMARY
-          echo "- x64 DMG: $(ls -lh dist/AppleBlox-${VERSION}_x64.dmg 2>/dev/null || echo 'Not built')" >> $GITHUB_STEP_SUMMARY
-          echo "- Universal DMG: $(ls -lh dist/AppleBlox-${VERSION}_universal.dmg 2>/dev/null || echo 'Not built')" >> $GITHUB_STEP_SUMMARY
-          echo "- ARM64 DMG: $(ls -lh dist/AppleBlox-${VERSION}_arm64.dmg 2>/dev/null || echo 'Not built')" >> $GITHUB_STEP_SUMMARY
+          for arch in x64 universal arm64; do
+            echo "- ${arch^} DMG: $(ls -lh dist/AppleBlox-${VERSION}_${arch}.dmg 2>/dev/null || echo 'Not built')" >> $GITHUB_STEP_SUMMARY
+          done
 
   create-release:
     needs: build
@@ -103,11 +103,11 @@ jobs:
         with:
           fetch-depth: 0  # This ensures we fetch all history and tags
 
-      - name: Get previous tag
+      - name: Get Previous Tag
         run: |
           echo "PREVIOUS_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo '')" >> $GITHUB_ENV
 
-      - name: Generate commit history
+      - name: Generate Commit History
         run: |
           if [ -n "${{ env.PREVIOUS_TAG }}" ]; then
             echo "### Commits since ${{ env.PREVIOUS_TAG }}" > CHANGELOG.md
@@ -119,12 +119,12 @@ jobs:
             git log --pretty=format:"- [%h](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/%H) %s" >> CHANGELOG.md
           fi
 
-      - name: Download all artifacts
+      - name: Download All Artifacts
         uses: actions/download-artifact@v4
         with:
           path: ./artifacts
 
-      - name: Create Release
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           name: Release ${{ needs.build.outputs.version }}
