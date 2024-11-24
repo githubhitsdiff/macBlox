@@ -1,24 +1,31 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<script src="<%- url %>/__neutralino_globals.js"></script>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>AppleBlox</title>
-		<style>
-			body {
-				background-color: white;
-			}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="AppleBlox - Your App for Roblox Items" />
+    <title>AppleBlox</title>
+    <script src="<%- url %>/__neutralino_globals.js"></script>
+    <style>
+      :root {
+        --background-light: white;
+        --background-dark: #171717;
+      }
 
-			@media (prefers-color-scheme: dark) {
-				body {
-					background-color: #171717;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<div id="app"></div>
-		<script type="module" src="/src/windows/main/main.ts"></script>
-	</body>
+      body {
+        background-color: var(--background-light);
+        transition: background-color 0.3s ease-in-out;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: var(--background-dark);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/windows/main/main.ts" defer></script>
+  </body>
 </html>
