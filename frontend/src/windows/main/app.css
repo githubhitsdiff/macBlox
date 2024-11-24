@@ -2,15 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-/* For WebKit-based browsers */
+/* Scrollbar styling for WebKit-based browsers */
 ::-webkit-scrollbar {
 	width: 12px;
-	/* Width of the scrollbar */
 }
 
 ::-webkit-scrollbar-thumb {
-	background: #5d3b3b;
-	/* Color of the scrollbar thumb (the draggable part) */
+	background-color: #5d3b3b;
 	border-radius: 15px;
 }
 
@@ -18,15 +16,15 @@
 	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 	line-height: 1.5;
 	font-weight: 400;
-
 	background-color: #242424;
-
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
+	--radius: 0.5rem;
 }
 
 @layer base {
+	/* Default theme colors */
 	:root {
 		--background: 0 0% 90%;
 		--foreground: 0 0% 9%;
@@ -49,9 +47,9 @@
 		--destructive: 6 92% 43%;
 		--destructive-foreground: 0 0% 100%;
 		--ring: 346.19 64.65% 42.16%;
-		--radius: 0.5rem;
 	}
 
+	/* Dark theme */
 	.dark {
 		--background: 0 0% 9%;
 		--foreground: 220 10% 90%;
@@ -91,15 +89,13 @@ body {
 	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 	line-height: 1.5;
 	font-weight: 400;
-
-	font-synthesis: none;
-	text-rendering: optimizeLegibility;
 	margin: 0;
 	display: flex;
 	place-items: center;
 	min-width: 320px;
 	min-height: 100vh;
 	overflow: hidden;
+	@apply bg-background text-foreground;
 }
 
 h1 {
@@ -118,16 +114,6 @@ h1 {
 	text-align: center;
 }
 
-@layer base {
-	* {
-		@apply border-border;
-	}
-
-	body {
-		@apply bg-background text-foreground;
-	}
-}
-
 .icon-overlay {
 	-webkit-mask-size: contain;
 	mask-size: contain;
@@ -135,4 +121,11 @@ h1 {
 	mask-repeat: no-repeat;
 	-webkit-mask-position: center;
 	mask-position: center;
+}
+
+/* For a cleaner structure, applying Tailwind utility classes */
+@layer base {
+	* {
+		@apply border-border;
+	}
 }
