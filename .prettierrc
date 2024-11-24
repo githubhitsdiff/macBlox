@@ -1,12 +1,19 @@
 {
-	"plugins": ["prettier-plugin-svelte"],
-	"overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }],
-	"trailingComma": "es5",
-	"bracketSpacing": true,
-	"arrowParens": "always",
-	"printWidth": 130,
-	"useTabs": true,
-	"tabWidth": 4,
-	"semi": true,
-	"singleQuote": true
+  "plugins": ["prettier-plugin-svelte"],
+  "overrides": [
+    {
+      "files": "*.svelte",
+      "options": {
+        "parser": "svelte"
+      }
+    }
+  ],
+  "trailingComma": "es5",            // Adds trailing commas where valid in ES5 (objects, arrays, etc.)
+  "bracketSpacing": true,            // Ensures spacing inside object literals
+  "arrowParens": "always",           // Always include parentheses around arrow function parameters
+  "printWidth": 130,                 // Sets the maximum line length before wrapping
+  "useTabs": true,                   // Indents using tabs rather than spaces
+  "tabWidth": 4,                     // Sets the width of a tab character (4 spaces worth)
+  "semi": true,                      // Adds a semicolon at the end of every statement
+  "singleQuote": true                // Use single quotes instead of double quotes for strings
 }
