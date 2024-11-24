@@ -1,30 +1,33 @@
 {
-	"extends": "@tsconfig/svelte/tsconfig.json",
-	"compilerOptions": {
-		"target": "ESNext",
-		"lib": ["DOM", "ESNext"],
-		"useDefineForClassFields": true,
-		"verbatimModuleSyntax": true,
-		"module": "ESNext",
-		"resolveJsonModule": true,
-		"moduleResolution": "bundler",
-		/**
-		 * Typecheck JS in `.svelte` and `.js` files by default.
-		 * Disable checkJs if you'd like to use dynamic types in JS.
-		 * Note that setting allowJs false does not prevent the use
-		 * of JS in `.svelte` files.
-		 */
-		"allowJs": true,
-		"checkJs": true,
-		"isolatedModules": true,
-		"paths": {
-			"$lib": ["./frontend/src/lib/"],
-			"$lib/*": ["./frontend/src/lib/*"],
-			"@": ["./frontend/src/"],
-			"@/*": ["./frontend/src/*"],
-			"@root/*": ["./*"]
-		}
-	},
-	"include": ["frontend/src/**/*.ts", "frontend/src/**/*.js", "frontend/src/**/*.svelte"],
-	"references": [{ "path": "./tsconfig.node.json" }]
+  "extends": "@tsconfig/svelte/tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNext",                            // Use the latest ECMAScript features
+    "lib": ["DOM", "ESNext"],                      // Include modern JS features and DOM types
+    "useDefineForClassFields": true,               // Ensures class fields are defined according to the standard
+    "verbatimModuleSyntax": true,                  // Use the exact module syntax in Svelte files
+    "module": "ESNext",                            // Use ES modules for compatibility with modern JavaScript
+    "resolveJsonModule": true,                     // Allow importing `.json` files as modules
+    "moduleResolution": "bundler",                 // Use bundler strategy for resolving modules (works well with Vite)
+    "allowJs": true,                               // Allows JavaScript files in the project
+    "checkJs": true,                               // Enables type-checking for JS files (good for mixed JS/TS projects)
+    "isolatedModules": true,                       // Ensures each file is treated as an isolated module, improving the build process
+    "strict": true,                                // Enforce strict type checking for more reliable code
+    "esModuleInterop": true,                       // Ensures default imports work seamlessly with CommonJS modules
+    "skipLibCheck": true,                          // Skips type-checking of declaration files to speed up the build
+    "paths": {
+      "$lib": ["./frontend/src/lib/"],             // Alias for the 'lib' directory
+      "$lib/*": ["./frontend/src/lib/*"],          // Recursive alias for all files within 'lib'
+      "@": ["./frontend/src/"],                    // Alias for the 'src' directory
+      "@/*": ["./frontend/src/*"],                 // Recursive alias for all files within 'src'
+      "@root/*": ["./*"]                           // Alias for the root directory
+    }
+  },
+  "include": [
+    "frontend/src/**/*.ts",                        // Include all TypeScript files in the 'src' folder
+    "frontend/src/**/*.js",                        // Include all JavaScript files in the 'src' folder
+    "frontend/src/**/*.svelte"                     // Include all Svelte files in the 'src' folder
+  ],
+  "references": [
+    { "path": "./tsconfig.node.json" }             // Reference to node-specific TypeScript config for backend compatibility (if needed)
+  ]
 }
