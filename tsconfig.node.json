@@ -1,16 +1,28 @@
 {
-	"compilerOptions": {
-		"composite": true,
-		"skipLibCheck": true,
-		"module": "ESNext",
-		"moduleResolution": "bundler",
-		"paths": {
-			"$lib": ["./frontend/src/lib/"],
-			"$lib/*": ["./frontend/src/lib/*"],
-			"@": ["./frontend/src/"],
-			"@/*": ["./frontend/src/*"],
-			"@root/*": ["./*"]
-		}
-	},
-	"include": ["./vite.config.ts", "scripts/**/*.ts"]
+  "compilerOptions": {
+    "composite": true,                          // Enables composite projects for faster builds and incremental compilation.
+    "skipLibCheck": true,                       // Skip type checking of declaration files to speed up the compilation.
+    "module": "ESNext",                         // Use the latest ECMAScript module syntax, which is the recommended choice for modern JavaScript/TypeScript.
+    "moduleResolution": "bundler",              // Use the bundler module resolution strategy, suitable for Vite and modern bundlers.
+    "target": "ESNext",                         // Compile to the latest ECMAScript version, which allows using the latest JS features.
+    "strict": true,                             // Enable all strict type-checking options. This is a good practice to catch more potential issues.
+    "esModuleInterop": true,                    // Enables default imports for CommonJS modules, making interop with third-party modules smoother.
+    "resolveJsonModule": true,                  // Allow importing `.json` files as modules.
+    "baseUrl": ".",                             // Set the base directory for relative paths. (Note: Added for better clarity and flexibility in the project structure.)
+    "paths": {
+      "$lib": ["./frontend/src/lib/"],
+      "$lib/*": ["./frontend/src/lib/*"],
+      "@": ["./frontend/src/"],
+      "@/*": ["./frontend/src/*"],
+      "@root/*": ["./*"]
+    }
+  },
+  "include": [
+    "./vite.config.ts",
+    "scripts/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",                             // Exclude node_modules to prevent unnecessary type-checking of third-party packages.
+    "dist"                                      // Exclude build output folder to avoid compiling artifacts.
+  ]
 }
