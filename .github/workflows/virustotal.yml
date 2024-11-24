@@ -11,11 +11,27 @@ jobs:
       actions: read
       packages: read
     runs-on: ubuntu-latest
+
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
       - name: VirusTotal Scan
         uses: crazy-max/ghaction-virustotal@v4
         with:
           update_release_body: true
           vt_api_key: ${{ secrets.VT_API_KEY }}
           files: |
-            .dmg$
+            dist/*.dmg  # Adjust this to point to your actual DMG files or other file extensions if necessary
+
+      - name: Check for Errors and Update Release Body
+        if: failure()
+        run: |
+          echo "Error: VirusTotal scan failed. Please check the scan logs for details."
+          exit 1
+
+      - name: Successful Scan Notification
+        if: success()
+        run: |
+          echo "VirusTotal scan completed successfully."
+
