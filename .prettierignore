@@ -1,8 +1,16 @@
-node_modules
-dist
-/build
-.tmp
-.github
-.git
-bin
-frontend/src/lib/components
+# Node modules
+node_modules/
+
+# Build output
+dist/
+build/
+.tmp/
+
+# Git-related files
+.git/
+
+# Other binaries or assets
+bin/
+
+# Svelte component source
+frontend/src/lib/components/
