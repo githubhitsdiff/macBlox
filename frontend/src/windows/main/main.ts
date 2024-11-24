@@ -18,44 +18,57 @@ import { logDebugInfo } from './ts/utils/debug';
 init();
 
 async function quit() {
-	console.info('[Main] Exiting app');
-	await RPCController.stop();
-	await shell('pkill', ['-f', '_ablox'], { skipStderrCheck: true });
-	// Send quit event if in browser mode
-	if (window.NL_ARGS.includes('--mode=browser')) {
-		neuApp.writeProcessOutput('quit');
-	}
-	await neuApp.exit();
+    try {
+        console.info('[Main] Exiting app');
+        await RPCController.stop();
+        await shell('pkill', ['-f', '_ablox'], { skipStderrCheck: true });
+
+        if (window.NL_ARGS.includes('--mode=browser')) {
+            neuApp.writeProcessOutput('quit');
+        }
+
+        await neuApp.exit();
+    } catch (error) {
+        console.error('[Main] Error during quit:', error);
+    }
 }
 
+const handleAppReady = async () => {
+    await loadTheme();
+    neuWindow.show();
+    if (getMode() === 'prod') focusWindow();
+
+    setTimeout(async () => {
+        try {
+            const appPort = process.env.APP_PORT || window.NL_PORT;
+            console.info(`[App] Running at http://localhost:${appPort}`);
+            logDebugInfo();
+        } catch (error) {
+            console.error('[App] Error during startup:', error);
+        }
+    }, 500);
+};
+
+const handleWindowClose = () => quit();
+const handleExitApp = () => quit();
+
 // When NeutralinoJS is ready:
-events.on('ready', async () => {
-	// Load CSS Theme
-	await loadTheme();
-	// Show the window
-	neuWindow.show();
-	if (getMode() === 'prod') focusWindow();
-	// Log debug information
-	setTimeout(async () => {
-		console.info(`Running at http://localhost:${window.NL_PORT}`)
-		logDebugInfo();
-	}, 500);
-});
+events.on('ready', handleAppReady);
 
 // Cleanup when the application is closing
-events.on('windowClose', quit);
-events.on('exitApp', quit);
+events.on('windowClose', handleWindowClose);
+events.on('exitApp', handleExitApp);
 
 // Check if app is in browser mode and add tab close event
 if (window.NL_ARGS.includes("--mode=browser")) {
-	window.addEventListener("beforeunload",()=>{
-		quit()
-	})
+    window.addEventListener("beforeunload", async () => {
+        await quit();
+    });
 }
 
 const app = new App({
-	// @ts-expect-error
-	target: document.getElementById('app'),
+    // @ts-expect-error
+    target: document.getElementById('app'),
 });
 
 export default app;
