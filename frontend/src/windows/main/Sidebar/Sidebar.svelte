@@ -36,44 +36,30 @@
 		{ label: 'Info', id: 'info', icon: CreditsIcon },
 	];
 
-	// App mode check (add 'Dev' sidebar button)
+	// Add Dev button based on mode
 	let isDevBtnAdded = false;
-	if (getMode() === 'dev' && !isDevBtnAdded) {
-		sidebarBtns.push({ label: 'Dev', id: 'dev', icon: '' });
-		isDevBtnAdded = true;
-	}
-	(async () => {
-		if (await shellFS.exists(path.join(await os.getEnv('HOME'), 'adevmode'))) {
+	const checkDevMode = async () => {
+		if (getMode() === 'dev' || await shellFS.exists(path.join(await os.getEnv('HOME'), 'adevmode'))) {
+			sidebarBtns.push({ label: 'Dev', id: 'dev', icon: '' });
+			isDevBtnAdded = true;
 			console.debug('[App] Running in "development" mode');
-			if (!isDevBtnAdded) {
-				sidebarBtns.push({ label: 'Dev', id: 'dev', icon: '' });
-				isDevBtnAdded = true;
-			}
 		} else {
 			console.debug('[App] Running in "production" mode');
 		}
-	})();
+	};
+	checkDevMode();
 
 	// Play button text and color
 	let isHovering = false;
 	$: buttonState = isLaunched ? (isHovering ? 'Kill' : 'Active') : 'Play';
 	$: buttonIcon = buttonState === 'Play' ? PlayIcon : buttonState === 'Active' ? RobloxIcon : KillIcon;
 
-	function handleMouseEnter() {
-		isHovering = true;
-	}
-
-	function handleMouseLeave() {
-		isHovering = false;
-	}
-
-	// Change page on button click
+	// Change page on sidebar item click
 	function sidebarItemClicked(e: CustomEvent) {
-		if (e.detail === 'none') return;
-		currentPage = e.detail;
+		if (e.detail !== 'none') currentPage = e.detail;
 	}
 
-	// Launch roblox event
+	// Launch Roblox event
 	const dispatch = createEventDispatcher<{ launchRoblox: boolean }>();
 </script>
 
@@ -84,11 +70,7 @@
 			class="flex items-center justify-center mt-3"
 			target="_blank"
 			rel="noreferrer"
-			on:click={() => {
-				os.open('https://github.com/AppleBlox/appleblox').catch((err) => {
-					console.error('[UI.Sidebar] ', err);
-				});
-			}}
+			on:click={() => os.open('https://github.com/AppleBlox/appleblox').catch((err) => console.error('[UI.Sidebar] ', err))}
 		>
 			<p class="text-primary font-bold font-mono text-2xl">AppleBlox</p>
 		</a>
@@ -112,16 +94,17 @@
 	<div class="flex flex-col items-center mb-4 mt-auto">
 		<p class="text-sm text-muted-foreground mb-2">v{version}</p>
 
-		<div on:mouseenter={handleMouseEnter} on:mouseleave={handleMouseLeave} role="tooltip" class="w-full px-4">
+		<div class="w-full px-4" on:mouseenter={() => isHovering = true} on:mouseleave={() => isHovering = false}>
 			<Button
-				class={`${isLaunched ? 'bg-primary/80 -hue-rotate-90 hover:bg-red-500 hover:hue-rotate-0' : 'bg-green-500/85 hover:bg-green-500/60'} font-mono w-full transition-all duration-200 group`}
+				class={`font-mono w-full transition-all duration-200 group ${isLaunched ? 'bg-primary/80 -hue-rotate-90 hover:bg-red-500 hover:hue-rotate-0' : 'bg-green-500/85 hover:bg-green-500/60'}`}
 				on:click={() => {
 					if (isLaunched) {
 						events.broadcast('instance:quit').catch(console.error);
-						return;
+					} else {
+						dispatch('launchRoblox', true);
 					}
-					dispatch('launchRoblox', true);
 				}}
+				aria-label={isLaunched ? 'Quit instance' : 'Launch Roblox'}
 			>
 				<ColorImage src={buttonIcon} alt="Button icon" class="w-5 h-5 mr-1 mt-[1px]" color="white" />
 				<p class="font-mono transition duration-150">{buttonState}</p>
